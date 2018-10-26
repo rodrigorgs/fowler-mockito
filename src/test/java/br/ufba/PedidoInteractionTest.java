@@ -1,4 +1,4 @@
-package org.tiqwab.example.mockito;
+package br.ufba;
 
 import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -6,8 +6,11 @@ import static org.hamcrest.MatcherAssert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class PedidoStateTest {
-	
+import br.ufba.Armazem;
+import br.ufba.Pedido;
+
+public class PedidoInteractionTest {
+
 	private static final String TALISMA = "talismã";
 	
 	@Before
@@ -15,31 +18,35 @@ public class PedidoStateTest {
 	}
 	
 	@Test
-	public void testPedidoEhExecutadoSeTemSuficienteNoArmazem() throws Exception {
+	public void testExecutarPedidoRemoveDoInventarioSeTiverEstoque() throws Exception {
 		// setup
+		Pedido pedido = new Pedido(TALISMA, 20);
 		Armazem armazem = mock(Armazem.class);
 		when(armazem.getQtdProduto(TALISMA)).thenReturn(50);
-		Pedido order = new Pedido(TALISMA, 20);
 		
 		// execute
-		order.executa(armazem);
+		pedido.executa(armazem);
 		
 		// verify
-		assertThat(order.foiExecutado(), is(true));
+		assertThat(pedido.foiExecutado(), is(true));
+		verify(armazem, times(1)).getQtdProduto(TALISMA);
+		verify(armazem, times(1)).remove(TALISMA, 20);
 	}
 	
 	@Test
-	public void testPedidoNaoEhExecutadoSeNaoTemSuficienteNoArmazem() throws Exception {
+	public void testExecutarPedidoNaoRemoveDoInventarioSeNaoTiverEstoque() throws Exception {
 		// setup
+		Pedido pedido = new Pedido(TALISMA, 20);
 		Armazem armazem = mock(Armazem.class);
 		when(armazem.getQtdProduto(TALISMA)).thenReturn(10);
-		Pedido pedido = new Pedido(TALISMA, 20);
 		
 		// execute
 		pedido.executa(armazem);
 		
 		// verify
 		assertThat(pedido.foiExecutado(), is(false));
+		verify(armazem, times(1)).getQtdProduto(TALISMA);
+		verify(armazem, never()).remove(eq(TALISMA), anyInt());
 	}
-
+	
 }

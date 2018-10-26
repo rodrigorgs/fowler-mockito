@@ -1,4 +1,4 @@
-package org.tiqwab.example.mockito;
+package br.ufba;
 
 public interface Armazem {
 	
