@@ -1,14 +1,8 @@
 package org.tiqwab.example.mockito;
 
-import lombok.Getter;
-
 public class Order {
-
-	@Getter
 	private String sku;
-	@Getter
 	private int qty;
-	@Getter
 	private boolean isFilled;
 	
 	public Order(String sku, int qty) {
@@ -24,5 +18,18 @@ public class Order {
 			warehouse.remove(this.sku, this.qty);
 		}
 	}
+
+	public String getSku() {
+		return sku;
+	}
+
+	public int getQty() {
+		return qty;
+	}
+
+	public boolean isFilled() {
+		return isFilled;
+	}
+
 	
 }
